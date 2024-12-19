@@ -1,7 +1,7 @@
 import { Global, Module, Scope } from '@nestjs/common';
 import { CONNECTION } from './tenancy.symbols';
 import { Request as ExpressRequest } from 'express';
-import { TenantConnection } from './tenancy.utils';
+import { TenantConnection } from './tenancy-connection';
 import { REQUEST } from '@nestjs/core';
 
 const connectionFactory = {

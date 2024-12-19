@@ -8,6 +8,7 @@ config();
 
 const configService = new ConfigService();
 
+const cert = configService.getOrThrow("DB_CERTIFICATE")
 export const ORM_CONFIG: DataSourceOptions = {
   type: 'postgres',
   host: configService.getOrThrow("DB_HOST"),
@@ -16,6 +17,7 @@ export const ORM_CONFIG: DataSourceOptions = {
   password: configService.getOrThrow("DB_PASSWORD"),
   database: configService.getOrThrow("DB_DATABASE"),
   logging: configService.getOrThrow<boolean>("DB_LOGGING"),
+  ssl: cert ? { ca: cert } : undefined,
   namingStrategy: new SnakeNamingStrategy(),
   entities: [join(__dirname, '..', './modules/admin-modules/**/*.entity{.ts,.js}')],
   migrations: [join(__dirname, './migrations/admin/*{.ts,.js}')],

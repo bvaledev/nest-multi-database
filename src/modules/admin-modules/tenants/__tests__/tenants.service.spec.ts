@@ -4,10 +4,10 @@ import { TenantDatabase } from '../entities/tenant-database.entity';
 import { Tenant } from '../entities/tenant.entity';
 import { TenantsService } from '../tenants.service';
 import { DataSource, ILike } from 'typeorm';
-import { TenantConnection } from '../../../tenancy-module/tenancy.utils';
+import { TenantConnection } from '../../../tenancy-module/tenancy-connection';
 import { TenantPaginationDto } from '../dto/tenant-pagination.dto';
 
-jest.mock('../../../tenancy-module/tenancy.utils', () => {
+jest.mock('../../../tenancy-module/tenancy-connection', () => {
   return {
     TenantConnection: {
       getInstance: jest.fn()
@@ -72,9 +72,12 @@ const fakeDataSource: DataSource = {
   }),
 } as unknown as DataSource
 
+const mockDataSource = {
+  runMigrations: jest.fn(),
+  destroy: jest.fn()
+}
 const tenantConnectionMock = {
-  testConnection: jest.fn().mockResolvedValue({ anyObject: "anyObject" }), // Simula conexão bem-sucedida
-  migrateDatasource: jest.fn().mockResolvedValue(undefined), // Simula migração bem-sucedida
+  createConnection: jest.fn().mockResolvedValue(mockDataSource)
 };
 
 describe('TenantsService', () => {
@@ -220,7 +223,7 @@ describe('TenantsService', () => {
     });
 
     it('should throw when connection is invalid', async () => {
-      tenantConnectionMock.testConnection.mockResolvedValueOnce(null)
+      tenantConnectionMock.createConnection.mockResolvedValueOnce(null)
 
       const promise = service.testTenantDatabaseConnection('tenant_id')
 
@@ -230,7 +233,7 @@ describe('TenantsService', () => {
     it('should validate connection', async () => {
       await service.testTenantDatabaseConnection('tenant_id')
 
-      expect(tenantConnectionMock.testConnection).toHaveBeenCalledTimes(1)
+      expect(tenantConnectionMock.createConnection).toHaveBeenCalledTimes(1)
     });
   });
 
@@ -275,7 +278,7 @@ describe('TenantsService', () => {
     });
 
     it('should throw when tenant database does not exists', async () => {
-      tenantConnectionMock.testConnection.mockResolvedValueOnce(null)
+      tenantConnectionMock.createConnection.mockResolvedValueOnce(null)
 
       const promise = service.migrateTenantDatabase('tenant_id')
 
@@ -285,7 +288,8 @@ describe('TenantsService', () => {
     it('should throw when tenant database does not exists', async () => {
       await service.migrateTenantDatabase('tenant_id')
 
-      expect(tenantConnectionMock.migrateDatasource).toHaveBeenCalledTimes(1)
+      expect(mockDataSource.runMigrations).toHaveBeenCalledTimes(1)
+      expect(mockDataSource.destroy).toHaveBeenCalledTimes(1)
       expect(fakeTenantDatabaseRepository.update).toHaveBeenCalledTimes(1)
       expect(fakeTenantDatabaseRepository.update).toHaveBeenCalledWith("database_id", { migratedAt: expect.anything() })
     });

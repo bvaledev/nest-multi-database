@@ -4,7 +4,7 @@ import { UpdateTenantDto } from './dto/update-tenant.dto';
 import { DataSource, Repository, ILike } from 'typeorm';
 import { Tenant } from './entities/tenant.entity';
 import { TenantDatabase } from './entities/tenant-database.entity';
-import { TenantConnection } from '../../../modules/tenancy-module/tenancy.utils';
+import { TenantConnection } from '../../tenancy-module/tenancy-connection';
 import { TenantPaginationDto } from './dto/tenant-pagination.dto';
 import { TenantDatabaseDto } from './dto/tenant-database.dto';
 
@@ -56,10 +56,11 @@ export class TenantsService {
       throw new UnprocessableEntityException("Tenant database not found")
     }
     const tenantManager = TenantConnection.getInstance()
-    const connection = await tenantManager.testConnection(tenantExists.database)
+    const connection = await tenantManager.createConnection(tenantExists.database)
     if (!connection) {
       throw new UnprocessableEntityException("Invalid database connection")
     }
+    await connection.destroy()
   }
 
   async migrateTenantDatabase(tenantId: string) {
@@ -68,10 +69,10 @@ export class TenantsService {
       if (!tenantExists) throw new UnprocessableEntityException("Tenant not found")
       if (!tenantExists.database) throw new UnprocessableEntityException("Tenant database not found")
       const tenantManager = TenantConnection.getInstance()
-      const connection = await tenantManager.testConnection(tenantExists.database)
+      const connection = await tenantManager.createConnection(tenantExists.database)
       if (!connection) throw new UnprocessableEntityException("Invalid database connection")
-      await tenantManager.migrateDatasource(connection)
-
+      await connection.runMigrations()
+      await connection.destroy()
       await this.tenantDatabaseRepository.update(tenantExists.database.id, {
         migratedAt: new Date(),
       });
