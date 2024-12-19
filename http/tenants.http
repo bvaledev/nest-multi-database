@@ -1,0 +1,75 @@
+@tenantId = f474c904-8b85-4c6e-99a6-23e76cd4270b
+
+###
+# @name getTenantsPaginates
+GET http://localhost:3000/tenants
+Content-Type: application/json
+
+
+
+###
+# @name createTenant
+POST http://localhost:3000/tenants
+Content-Type: application/json
+
+{
+  "name": "empresa5",
+  "slug": "empresa5",
+  "isEnabled": true,
+  "database": {
+    "host": "localhost",
+    "port": 5432,
+    "database": "empresa5",
+    "username": "postgres",
+    "password": "root"
+    // "certificate": "-----BEGIN CERTIFICATE REQUEST-----\nMIIC6jCCAdQCAQAwdzF1MBkGA1UEAwwSYXNkc2FkYXNkZGFzYXMuY29tMBkGCSqG\nSIb3DQEJARMMZGFkYXNAZ2cuY29tMAcGA1UECxMAMAcGA1UEChMAMAcGA1UECRMA\nMAcGA1UEBxMAMAcGA1UECBMAMAcGA1UEERMAMAcGA1UEBhMAMIIBIjANBgkqhkiG\n9w0BAQEFAAOCAQ8AMIIBCgKCAQEApQ25PSxsqK4RedaUxAOwLhEEd6Z4MOJm6MmG\nGFyy4gC0k91Gqj1bKX5Wh2lRmp3ZYWBxBd4j+4p5IL6IA+lzbzL77ZIiOhUNAAQf\nQ780eINlPQrq6UHYe8hNN2QY9fH6mHdhM9uov+bxtTZ96+0OBDpcM+QARNBljTC6\nVgP4iGknRrKeDfc5OFPSNLZG4oVEn5Orh8LKYCoMUA18h/6L+r0OzpdawcmrTvxr\n6FHjzp1UcrCNkWFcQ8yTr2yI+NvR0nOywlrqBJyLI5DZfNVfzbuJcQK9/QBXmda1\nnJabNQ+Qy6HPppNUq8n+WOkGRp9DNLypsQcxLceDQbUA577T9wIDAQABoDAwLgYJ\nKoZIhvcNAQkOMSEwHzAdBgNVHQ4EFgQUTMgUi3fQhjMjl/Lwmbqa3BSAlAAwCwYJ\nKoZIhvcNAQELA4IBAQBWzuTWsvcNgDWhY9UJfIL6Tt+UnHS1sCsZ3K96fpDdV6kx\nc2CSU6KBK63PSNcCzqlnNRv5FXbjEnf7sCKIWkFGLTFDS1R02JpAXZf0PpDrgqDE\nCwwoizvbm4DXgMSnyxatPhStuepQUn1xC+I5cEAckhHJJbpgVnc667x6jtYzq5MS\nsZDuM+zwrc+m2IOQntnJdV47VS5zL0D7B0dmp46tiJP8/Mne2PfxBjrMAnWgEm8a\npoXmcffa+wPu9ho02ZFlsFxYTyeYrx0r1l9EKSfJzrtMIklAlntVZIcjyHLMX7ja\niO1JVjb1un3HwHjbspPj7hADzEVUbDxDfb9IVZTQ\n-----END CERTIFICATE REQUEST-----"
+  }
+}
+
+
+
+###
+# @name updateTenant
+PUT  http://localhost:3000/tenants/{{tenantId}}
+Content-Type: application/json
+
+{
+  "name": "empresa3",
+  "slug": "empresa3",
+  "isEnabled": true
+}
+
+
+
+# TENANT DATABASE MANAGER
+
+
+
+###
+# @name getTenantDatabaseByTenantId
+GET http://localhost:3000/tenants/{{tenantId}}/database
+Content-Type: application/json
+
+###
+# @name updateTenantDatabaseByTenantId
+PUT http://localhost:3000/tenants/{{tenantId}}/database
+Content-Type: application/json
+
+{
+  "host": "localhost",
+  "port": 5432,
+  "database": "empresa3",
+  "username": "postgres",
+  "password": "root"
+  // "certificate": "-----BEGIN CERTIFICATE REQUEST-----\nMIIC6jCCAdQCAQAwdzF1MBkGA1UEAwwSYXNkc2FkYXNkZGFzYXMuY29tMBkGCSqG\nSIb3DQEJARMMZGFkYXNAZ2cuY29tMAcGA1UECxMAMAcGA1UEChMAMAcGA1UECRMA\nMAcGA1UEBxMAMAcGA1UECBMAMAcGA1UEERMAMAcGA1UEBhMAMIIBIjANBgkqhkiG\n9w0BAQEFAAOCAQ8AMIIBCgKCAQEApQ25PSxsqK4RedaUxAOwLhEEd6Z4MOJm6MmG\nGFyy4gC0k91Gqj1bKX5Wh2lRmp3ZYWBxBd4j+4p5IL6IA+lzbzL77ZIiOhUNAAQf\nQ780eINlPQrq6UHYe8hNN2QY9fH6mHdhM9uov+bxtTZ96+0OBDpcM+QARNBljTC6\nVgP4iGknRrKeDfc5OFPSNLZG4oVEn5Orh8LKYCoMUA18h/6L+r0OzpdawcmrTvxr\n6FHjzp1UcrCNkWFcQ8yTr2yI+NvR0nOywlrqBJyLI5DZfNVfzbuJcQK9/QBXmda1\nnJabNQ+Qy6HPppNUq8n+WOkGRp9DNLypsQcxLceDQbUA577T9wIDAQABoDAwLgYJ\nKoZIhvcNAQkOMSEwHzAdBgNVHQ4EFgQUTMgUi3fQhjMjl/Lwmbqa3BSAlAAwCwYJ\nKoZIhvcNAQELA4IBAQBWzuTWsvcNgDWhY9UJfIL6Tt+UnHS1sCsZ3K96fpDdV6kx\nc2CSU6KBK63PSNcCzqlnNRv5FXbjEnf7sCKIWkFGLTFDS1R02JpAXZf0PpDrgqDE\nCwwoizvbm4DXgMSnyxatPhStuepQUn1xC+I5cEAckhHJJbpgVnc667x6jtYzq5MS\nsZDuM+zwrc+m2IOQntnJdV47VS5zL0D7B0dmp46tiJP8/Mne2PfxBjrMAnWgEm8a\npoXmcffa+wPu9ho02ZFlsFxYTyeYrx0r1l9EKSfJzrtMIklAlntVZIcjyHLMX7ja\niO1JVjb1un3HwHjbspPj7hADzEVUbDxDfb9IVZTQ\n-----END CERTIFICATE REQUEST-----"
+}
+
+###
+# @name testTenantDatabaseConnection
+POST http://localhost:3000/tenants/{{tenantId}}/test-connection
+Content-Type: application/json
+
+###
+# @name runTenantDatabaseMigration
+POST http://localhost:3000/tenants/{{tenantId}}/run-migration
+Content-Type: application/json
